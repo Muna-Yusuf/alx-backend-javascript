@@ -1,6 +1,6 @@
 # 0x00. ES6 Basics  
 
-<p align="center"> <img src="https://s3.amazonaws.com/alx-intranet.hbtn.io/uploads/medias/2019/12/08806026ef621f900121.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIARDDGGGOUSBVO6H7D%2F20240527%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240527T170118Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=a4daa8bab6199a07aed178a7670299821ad6b82905ada847e875d196cbbe0855" width="550" higth="550">
+<p align="center"> <img src="https://i.imgur.com/XYsQeE2.png" width="550" higth="550">
 
 ## Description:
 
