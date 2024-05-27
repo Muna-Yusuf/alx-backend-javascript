@@ -1,5 +1,7 @@
 export default function createIteratorObject(report) {
-    const employees = Object.values(report).flatMap(department => department.employees);
-    const iterator = employees[Symbol.iterator]();
-    return iterator;
+  const result = [];
+  for (const idx of Object.values(report.allEmployees)) {
+    result.push(...idx);
+  }
+  return result;
 }
