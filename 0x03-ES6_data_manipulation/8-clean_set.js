@@ -1,9 +1,9 @@
-export default function cleanSet(set, startString) {
-  if (!startString || typeof startString !== 'string') {
+export default function cleanSet(_set, startString) {
+  if (!startString || typeof startString !== 'string' || typeof _set !== 'object') {
     return '';
   }
   let re = '';
-  for (const value of set) {
+  for (const value of _set) {
     if (value.startsWith(startString)) {
       re += `${value.slice(startString.length)}-`;
     }
