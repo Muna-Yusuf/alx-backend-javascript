@@ -1,16 +1,9 @@
 export default function cleanSet(_set, startString) {
-  if (!startString || typeof startString !== 'string' || typeof _set !== 'object') {
-    return '';
-  }
-  let re = '';
-  for (const value of _set) {
-    if (value.startsWith(startString)) {
-      re += `${value.slice(startString.length)}-`;
-    }
-  }
-  if (re) {
-    re = re.slice(0, -1);
-  }
+  if (typeof _set !== 'object' || startString.length === 0 || typeof startString !== 'string') { return ''; }
 
-  return re;
+  const strSet = [];
+  [..._set].forEach((x) => {
+    if (x && x.indexOf(startString) === 0) strSet.push(x.replace(startString, ''));
+  });
+  return strSet.join('-');
 }
