@@ -9,5 +9,5 @@ export function queryAPI(endpoint) {
   }
 
   weakMap.set(endpoint, queryCount);
+  return queryCount;
 }
-
