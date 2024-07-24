@@ -1,44 +1,50 @@
 const http = require('http');
-const fs = require('fs');
+const fs = require('fs').promises; // Using promises directly
 
+/**
+ * Reads the student database and returns a promise with student counts and lists.
+ * @param {string} path - Path to the database file.
+ * @returns {Promise<object>} - A promise that resolves to an object with student counts and lists.
+ */
 function countStudents(path) {
-  return new Promise((resolve, reject) => {
-    fs.readFile(path, { encoding: 'utf-8' }, (err, data) => {
-      if (err) {
-        return reject(new Error('Cannot load the database'));
-      }
-
-      const lines = data.split('\n').slice(1, -1);
+  return fs.readFile(path, 'utf-8')
+    .then((data) => {
+      const lines = data.trim().split('\n').slice(1);
       const header = data.split('\n')[0].split(',');
 
       const idxFn = header.indexOf('firstname');
       const idxFd = header.indexOf('field');
 
+      if (idxFn === -1 || idxFd === -1) {
+        throw new Error('Invalid database format');
+      }
+
       const fields = {};
       const students = {};
-      const all = {};
 
       lines.forEach((line) => {
-        const list = line.split(',');
-        const field = list[idxFd];
-        const firstname = list[idxFn];
+        const [,, firstname, field] = line.split(',');
 
         fields[field] = (fields[field] || 0) + 1;
         students[field] = students[field] ? `${students[field]}, ${firstname}` : firstname;
       });
 
-      all.numberStudents = `Number of students: ${lines.length}\n`;
-      all.listStudents = Object.entries(fields).map(
-        ([field, count]) => `Number of students in ${field}: ${count}. List: ${students[field]}`
-      );
+      const result = {
+        numberStudents: `Number of students: ${lines.length}\n`,
+        listStudents: Object.entries(fields).map(
+          ([field, count]) => `Number of students in ${field}: ${count}. List: ${students[field]}`
+        ),
+      };
 
-      resolve(all);
+      return result;
+    })
+    .catch((err) => {
+      throw new Error(`Cannot load the database: ${err.message}`);
     });
-  });
 }
 
-const hostname = '127.0.0.1';
-const port = 1245;
+const hostname = process.env.HOSTNAME || '127.0.0.1';
+const port = parseInt(process.env.PORT, 10) || 1245;
 
 const server = http.createServer((req, res) => {
   res.statusCode = 200;
@@ -54,8 +60,12 @@ const server = http.createServer((req, res) => {
         res.end(data.listStudents.join('\n'));
       })
       .catch((err) => {
-        res.end(err.message);
+        res.statusCode = 500;
+        res.end(`Error: ${err.message}`);
       });
+  } else {
+    res.statusCode = 404;
+    res.end('Not Found');
   }
 });
 
